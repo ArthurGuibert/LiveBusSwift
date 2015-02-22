@@ -11,6 +11,7 @@ import UIKit
 class LiveDeparturesController: UITableViewController {
     var stop: BusStop?
     var departures: [Departure]?
+    let cellHeight: CGFloat = 60.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,8 +39,7 @@ class LiveDeparturesController: UITableViewController {
         // Hiding separator
         tableView.separatorColor = UIColor(white: 1, alpha: 0)
         
-        println("BusStop: \(stop?.code)")
-        
+        // Fetching data
         Departure.getDepartures(stop!, { (departures: Array<Departure>) -> Void in
             self.departures = departures
             
@@ -61,6 +61,7 @@ class LiveDeparturesController: UITableViewController {
                 self.departures!.sort({$0.departureTime < $1.departureTime})
             }
             
+            // Refreshing on the main thread
             dispatch_async(dispatch_get_main_queue(),{
                 self.tableView.reloadData()
                 sender.endRefreshing()
@@ -95,7 +96,7 @@ class LiveDeparturesController: UITableViewController {
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 60
+        return cellHeight
     }
     
     func setFavorite() {
